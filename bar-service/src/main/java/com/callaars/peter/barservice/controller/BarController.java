@@ -1,14 +1,12 @@
 package com.callaars.peter.barservice.controller;
 
 import com.callaars.peter.barservice.dto.DrinkDto;
+import com.callaars.peter.barservice.dto.UserDrinkDto;
 import com.callaars.peter.barservice.service.BarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Email;
 
@@ -31,15 +29,18 @@ public class BarController {
         return barService.drinkExists(name);
     }
 
-//    @GetMapping("/drinks/{email}")
+
+    @GetMapping("/order/")
+    public boolean checkIfUserMayDrink(@RequestBody UserDrinkDto userDrinkDto) {
+        return barService.checkIfUserMayDrink(userDrinkDto);
+    }
+
+//    @GetMapping("/users/showdrinks/{email}")
 //    public Page<DrinkDto> getAvailableDrinks(@PathVariable
 //                                                 @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
 //                                                 String email) {
-//        if (!userExists(email)) {
-//            throw new IllegalArgumentException("No user known with email '@s'".formatted(email));
-//        }
-//        return null;
-//        // Continue here
+//
+//        return barService.getAvailableDrinks(email);
 //    }
 
 
