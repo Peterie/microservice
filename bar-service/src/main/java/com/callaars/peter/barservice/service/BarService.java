@@ -5,6 +5,8 @@ import com.callaars.peter.barservice.dto.UserDrinkDto;
 import com.callaars.peter.barservice.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -14,6 +16,7 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -70,17 +73,29 @@ public class BarService {
         }
     }
 
-//    public Page<DrinkDto> getAvailableDrinks(String email) {
-//        UserDto userDto = getUserDto(email);
-//        String age = String.valueOf(Period.between(userDto.getBirthDate(), LocalDate.now()).getYears());
-//        List<DrinkDto> drinkDtoList = webClientBuilder.build().get()
-//                .uri("http://drink-service/drinks/available/" + age)
-//                .retrieve()
-//                .onStatus(HttpStatus::isError,
-//                        clientResponse -> {
-//                            throw new ResponseStatusException(clientResponse.statusCode());
-//                        })
-//                .bodyToFlux(DrinkDto.class)
-//
-//    }
+    public Page<DrinkDto> getAvailableDrinks(String email) {
+        UserDto userDto = getUserDto(email);
+        String age = String.valueOf(Period.between(userDto.getBirthDate(), LocalDate.now()).getYears());
+        List<DrinkDto> drinkDtoList = webClientBuilder.build().get()
+                .uri("http://drink-service/drinks/available/" + age)
+                .retrieve()
+                .onStatus(HttpStatus::isError,
+                        clientResponse -> {
+                            throw new ResponseStatusException(clientResponse.statusCode());
+                        })
+                .bodyToFlux(DrinkDto.class)
+                .collectList()
+                .block();
+
+        int pageNo = 0; // the page number, starting from 0
+        int pageSize = 10; // the number of objects per page
+        int totalElements = drinkDtoList.size(); // the total number of objects in the list
+
+        List<DrinkDto> drinkDtoPageContent = drinkDtoList.stream()
+                .skip(pageNo * pageSize)
+                .limit(pageSize)
+                .collect(Collectors.toList());
+
+        return new PageImpl<DrinkDto>(drinkDtoPageContent, PageRequest.of(pageNo, pageSize), totalElements);
+    }
 }

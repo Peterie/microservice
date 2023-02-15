@@ -35,13 +35,13 @@ public class BarController {
         return barService.checkIfUserMayDrink(userDrinkDto);
     }
 
-//    @GetMapping("/users/showdrinks/{email}")
-//    public Page<DrinkDto> getAvailableDrinks(@PathVariable
-//                                                 @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
-//                                                 String email) {
-//
-//        return barService.getAvailableDrinks(email);
-//    }
+    @GetMapping("/users/showdrinks/{email}")
+    public Page<DrinkDto> getAvailableDrinks(@PathVariable
+                                                 @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
+                                                 String email) {
+
+        return barService.getAvailableDrinks(email);
+    }
 
 
 
