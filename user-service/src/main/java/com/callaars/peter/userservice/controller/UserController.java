@@ -12,6 +12,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Email;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -39,6 +43,13 @@ public class UserController {
                 .map(userDtoMapper::toDto);
     }
 
+    @GetMapping("/all")
+    public List<UserDto> getAllUsers(@PageableDefault(size = 20) Pageable pageable) {
+        return userService.getAllUsers()
+                .stream()
+                .map(userDtoMapper::toDto)
+                .collect(Collectors.toList());
+    }
 
     @PostMapping
     public UserDto createUser(@RequestBody UserDto userDto) {
@@ -60,5 +71,16 @@ public class UserController {
                                               String email) {
         userService.deleteUserByEmail(email);
     }
+
+//    @GetMapping("/olderthan/{age}")
+//    public List<UserDto> getUsersOlderThan(@PathVariable Integer age) {
+//        String dateNowMinusAge = Date.valueOf(LocalDate.now().minusYears(age)).toString();
+//        List<User> userList = userService.getUsersOlderThan(dateNowMinusAge);
+//
+//        return userList
+//                .stream()
+//                .map(userDtoMapper::toDto)
+//                .collect(Collectors.toList());
+//    }
 }
 

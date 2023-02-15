@@ -46,7 +46,7 @@ public class DrinkController {
     public List<DrinkDto> getAvailableDrinks(@PathVariable Integer age) {
         List<Drink> drinkList = drinkService.getAvailableDrinks(age);
 
-        return drinkService.getAvailableDrinks(age)
+        return drinkList
                 .stream()
                 .map(drinkDtoMapper::toDto)
                 .collect(Collectors.toList());

@@ -2,6 +2,7 @@ package com.callaars.peter.barservice.controller;
 
 import com.callaars.peter.barservice.dto.DrinkDto;
 import com.callaars.peter.barservice.dto.UserDrinkDto;
+import com.callaars.peter.barservice.dto.UserDto;
 import com.callaars.peter.barservice.service.BarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -43,15 +44,13 @@ public class BarController {
         return barService.getAvailableDrinks(email);
     }
 
+    @GetMapping("/drinks/showusers/{name}")
+    public Page<UserDto> getUsersWhoCanDrink(@PathVariable String name) {
+
+        return barService.getUsersWhoCanDrink(name);
+    }
 
 
-
-    // Create a GET method to check if a user is allowed to have a certain drink
-    // query param user (email) (required), query param drink (name) (required)
-    // Drink entity with the field UUID id, string name (unique), int minimumAge
-    // Can be located in either the barservice or a whole new service
-
-    // Create a GET Method to get a Page of Drinks, that a user can consume
 
     // Create a GET Method to get a Page of Users that can have a certain drink
 

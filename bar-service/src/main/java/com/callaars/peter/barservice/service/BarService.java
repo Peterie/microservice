@@ -98,4 +98,34 @@ public class BarService {
 
         return new PageImpl<DrinkDto>(drinkDtoPageContent, PageRequest.of(pageNo, pageSize), totalElements);
     }
+
+    public Page<UserDto> getUsersWhoCanDrink(String name) {
+        DrinkDto drinkDto = getDrinkDto(name);
+
+        List<UserDto> userDtoListWhoCanDrink = webClientBuilder.build().get()
+                .uri("http://user-service/users/all/")
+                .retrieve()
+                .onStatus(HttpStatus::isError,
+                        clientResponse -> {
+                            throw new ResponseStatusException(clientResponse.statusCode());
+                        })
+                .bodyToFlux(UserDto.class)
+                .collectList()
+                .block()
+                .stream()
+                .filter(userDto ->
+                        (Period.between(userDto.getBirthDate(), LocalDate.now()).getYears() >= drinkDto.getMinimumAge()))
+                .collect(Collectors.toList());
+
+        int pageNo = 0; // the page number, starting from 0
+        int pageSize = 10; // the number of objects per page
+        int totalElements = userDtoListWhoCanDrink.size(); // the total number of objects in the list
+
+        List<UserDto> UserDtoPageContent = userDtoListWhoCanDrink.stream()
+                .skip(pageNo * pageSize)
+                .limit(pageSize)
+                .collect(Collectors.toList());
+
+        return new PageImpl<UserDto>(UserDtoPageContent, PageRequest.of(pageNo, pageSize), totalElements);
+    }
 }

@@ -3,6 +3,7 @@ package com.callaars.peter.userservice.service;
 import com.callaars.peter.userservice.model.User;
 import com.callaars.peter.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.asm.Advice;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -74,4 +76,9 @@ public class UserService {
                     );
                 });
     }
+
+//    public List<User> getUsersOlderThan(String dateNowMinusAge) {
+//
+//        return userRepository.getUsersOlderThan(dateNowMinusAge);
+//    }
 }
