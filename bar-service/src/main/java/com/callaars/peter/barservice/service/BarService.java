@@ -1,5 +1,6 @@
 package com.callaars.peter.barservice.service;
 
+import com.callaars.peter.barservice.dto.DrinkDto;
 import com.callaars.peter.barservice.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,5 +28,19 @@ public class BarService {
                 .block();
 
         return userDto != null;
+    }
+
+    public boolean drinkExists(String name) {
+        DrinkDto drinkDto = webClientBuilder.build().get()
+                .uri("http://drink-service/drinks/" + name)
+                .retrieve()
+                .onStatus(HttpStatus::isError,
+                        clientResponse -> {
+                    throw new ResponseStatusException(clientResponse.statusCode());
+                        })
+                .bodyToMono(DrinkDto.class)
+                .block();
+
+        return drinkDto != null;
     }
 }

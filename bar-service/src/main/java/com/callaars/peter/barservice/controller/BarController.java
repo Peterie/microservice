@@ -19,23 +19,28 @@ public class BarController {
 
     private final BarService barService;
 
-    @GetMapping("/{email}")
+    @GetMapping("/users/{email}")
     public boolean userExists(@PathVariable
                                   @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
                                   String email) {
         return barService.userExists(email);
     }
 
-    @GetMapping("/drinks/{email}")
-    public Page<DrinkDto> getAvailableDrinks(@PathVariable
-                                                 @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
-                                                 String email) {
-        if (!userExists(email)) {
-            throw new IllegalArgumentException("No user known with email '@s'".formatted(email));
-        }
-        return null;
-        // Continue here
+    @GetMapping("/drinks/{name}")
+    public boolean drinkExists(@PathVariable String name) {
+        return barService.drinkExists(name);
     }
+
+//    @GetMapping("/drinks/{email}")
+//    public Page<DrinkDto> getAvailableDrinks(@PathVariable
+//                                                 @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
+//                                                 String email) {
+//        if (!userExists(email)) {
+//            throw new IllegalArgumentException("No user known with email '@s'".formatted(email));
+//        }
+//        return null;
+//        // Continue here
+//    }
 
 
 
